@@ -1,0 +1,28 @@
+# lenet batches=64 epochs=30
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 32, 32, 6)         156       
+                                                                 
+ average_pooling2d (Average  (None, 16, 16, 6)         0         
+ Pooling2D)                                                      
+                                                                 
+ conv2d_1 (Conv2D)           (None, 12, 12, 16)        2416      
+                                                                 
+ average_pooling2d_1 (Avera  (None, 6, 6, 16)          0         
+ gePooling2D)                                                    
+                                                                 
+ conv2d_2 (Conv2D)           (None, 2, 2, 120)         48120     
+                                                                 
+ flatten (Flatten)           (None, 480)               0         
+                                                                 
+ dense (Dense)               (None, 84)                40404     
+                                                                 
+ dense_1 (Dense)             (None, 5)                 425       
+                                                                 
+=================================================================
+Total params: 91521 (357.50 KB)
+Trainable params: 91521 (357.50 KB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________

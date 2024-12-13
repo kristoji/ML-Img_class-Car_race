@@ -17,6 +17,7 @@ def plot_loss(history, report_dir):
     plt.legend()
     plt.grid()
     plt.savefig(f'{report_dir}/loss_plot.png')
+    plt.close()
 
 def plot_accuracy(history, report_dir):
     """Plot and save training accuracy."""
@@ -32,6 +33,7 @@ def plot_accuracy(history, report_dir):
     plt.legend()
     plt.grid()
     plt.savefig(f'{report_dir}/accuracy_plot.png')
+    plt.close()
 
 def plot_f1_score(f1_callback, report_dir):
     """Plot and save F1 scores."""
@@ -47,6 +49,7 @@ def plot_f1_score(f1_callback, report_dir):
     plt.legend()
     plt.grid()
     plt.savefig(f'{report_dir}/f1_score_plot.png')
+    plt.close()
 
 def plot_confusion_matrix(y_test, y_pred, num_classes, report_dir):
     """Plot and save confusion matrix."""
@@ -62,6 +65,7 @@ def plot_confusion_matrix(y_test, y_pred, num_classes, report_dir):
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.savefig(f'{report_dir}/confusion_matrix.png')
+    plt.close()
 
 def save_classification_report(y_test, y_pred, num_classes, report_dir, verbose=True):
     """Save the classification report as a text file."""

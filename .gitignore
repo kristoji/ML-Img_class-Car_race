@@ -1,5 +1,9 @@
 # Report
 Report/*
+Hyp_Tuning/*
+
+#venv
+src/car_racing_env/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

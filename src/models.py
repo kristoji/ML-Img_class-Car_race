@@ -1,12 +1,12 @@
-from tensorflow.keras import optimizers
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, Dropout, AveragePooling2D
+from keras import optimizers
+from keras.models import Sequential
 from sklearn.metrics import f1_score
-from tensorflow.keras.callbacks import Callback
+from keras.callbacks import Callback
+from keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, Dropout, AveragePooling2D
 import numpy as np
 
 
-def build_cnn_model(input_shape, num_classes):
+def build_cnn_model(input_shape, num_classes, lr=0.001):
     model = Sequential([
         Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
         MaxPooling2D((2, 2)),
@@ -19,7 +19,8 @@ def build_cnn_model(input_shape, num_classes):
         Dropout(0.5),
         Dense(num_classes, activation='softmax')
     ])
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    optimizer = optimizers.Adam(learning_rate=lr)
+    model.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
 
 def build_leNet_model(input_shape, num_classes, lr=0.001):

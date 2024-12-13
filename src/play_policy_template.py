@@ -1,4 +1,6 @@
 import sys
+import numpy as np
+import keras
 
 try:
     import gymnasium as gym
@@ -11,13 +13,20 @@ except ModuleNotFoundError:
 def play(env, model):
 
     seed = 2000
+    print("Starting new game")
     obs, _ = env.reset(seed=seed)
-    
+
+
     # drop initial frames
     action0 = 0
     for i in range(50):
         obs,_,_,_,_ = env.step(action0)
     
+    print("------------------")
+    print(obs)
+    env.close()
+    exit()
+
     done = False
     while not done:
         p = model.predict(obs) # adapt to your model
@@ -42,8 +51,11 @@ print("Action space:", env.action_space)
 print("Observation space:", env.observation_space)
 
 # your trained
-model = ... # your trained model
+model = keras.models.load_model('../Hyp_Tuning/CNN_e10_b32_lr5/cnn_model.keras')
+print("Model loaded")
 
 play(env, model)
+
+env.close()
 
 

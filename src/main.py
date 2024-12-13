@@ -5,23 +5,12 @@ import reports
 import numpy as np
 import tensorflow as tf
 
-# TF_CPP_MIN_LOG_LEVEL=2 python main.py
-if __name__ == '__main__':
-    # gpus = tf.config.experimental.list_physical_devices('GPU')
-    # if gpus:
-    #     try:
-    #         for gpu in gpus:
-    #             tf.config.experimental.set_memory_growth(gpu, True)
-    #     except RuntimeError as e:
-    #         print(e)
+def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, overwrite=True):
 
-    REPORT=8
-    OVERWRITE = True
-
-    LENET = True
-    BATCH_SIZE = 32
-    EPOCHS = 50
-
+    OVERWRITE = overwrite
+    LENET = lenet
+    BATCH_SIZE = batch_size
+    EPOCHS = epochs
 
     NUM_CLASSES = 5
     data_path = '../Dataset'
@@ -37,7 +26,10 @@ if __name__ == '__main__':
         crop_bottom = True
 
     # Create the report directory
-    report_dir = f'../Report/{REPORT}'
+    REP = "LeNet" if LENET else "CNN"
+    REP += f"_e{EPOCHS}_b{BATCH_SIZE}"
+    REP += f"_lr" + str(lr)[-1]
+    report_dir = f'../Hyp_Tuning/' + REP
     os.makedirs(report_dir, exist_ok=OVERWRITE)
 
     # Load and preprocess the data
@@ -48,9 +40,9 @@ if __name__ == '__main__':
     # Compile the model
     input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])
     if LENET:
-        model = models.build_leNet_model(input_shape, NUM_CLASSES)
+        model = models.build_leNet_model(input_shape, NUM_CLASSES, lr=lr)
     else:
-        model = models.build_cnn_model(input_shape, NUM_CLASSES)
+        model = models.build_cnn_model(input_shape, NUM_CLASSES, lr=lr)
 
     # Print the model summary
     reports.save_summary(model, report_dir)
@@ -62,13 +54,22 @@ if __name__ == '__main__':
     )
 
     # Train the model
-    history = model.fit(
-        X_train, y_train,
-        validation_data=(X_test, y_test),
-        epochs=EPOCHS,
-        callbacks=[f1_callback],
-        batch_size=BATCH_SIZE
-    )
+    if LENET:
+        history = model.fit(
+            X_train, y_train,
+            validation_data=(X_test, y_test),
+            epochs=EPOCHS,
+            callbacks=[f1_callback],
+            batch_size=BATCH_SIZE
+        )
+    else:
+        history = model.fit(
+            X_train, y_train,
+            validation_data=(X_test, y_test),
+            epochs=EPOCHS,
+            # callbacks=[f1_callback],
+            batch_size=BATCH_SIZE
+        )
 
     # Plot and save the training loss
     reports.plot_loss(history, report_dir)
@@ -92,3 +93,27 @@ if __name__ == '__main__':
 
     # Save the model
     model.save(f'{report_dir}/cnn_model.keras')
+
+# TF_CPP_MIN_LOG_LEVEL=2 python main.py
+if __name__ == '__main__':
+    # gpus = tf.config.experimental.list_physical_devices('GPU')
+    # if gpus:
+    #     try:
+    #         for gpu in gpus:
+    #             tf.config.experimental.set_memory_growth(gpu, True)
+    #     except RuntimeError as e:
+    #         print(e)
+
+    OVERWRITE = True
+
+    LENET = False
+    BATCH_SIZE = 32
+    EPOCHS = 50
+
+    # main(EPOCHS, BATCH_SIZE, LENET, OVERWRITE)
+
+    for epochs in [10, 30]:
+        for batch_size in [32, 64]:
+            for lr in [1e-5, 1e-7]:
+                for lenet in [False, True]:
+                    main(epochs, batch_size, lr, lenet, OVERWRITE)

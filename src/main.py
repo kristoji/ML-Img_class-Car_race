@@ -5,7 +5,7 @@ import reports
 import numpy as np
 import tensorflow as tf
 
-def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, overwrite=True):
+def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, crop_bottom=False, overwrite=True):
 
     OVERWRITE = overwrite
     LENET = lenet
@@ -18,18 +18,19 @@ def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, overwrite=True):
         resize = (32,32)
         grayscale = True
         apply_remove_green = False
-        crop_bottom = True
+        crop_bottom = crop_bottom
     else:
         resize = (96,96)
         grayscale = False
         apply_remove_green = True
-        crop_bottom = True
+        crop_bottom = crop_bottom
 
     # Create the report directory
     REP = "LeNet" if LENET else "CNN"
     REP += f"_e{EPOCHS}_b{BATCH_SIZE}"
     REP += f"_lr" + str(lr)[-1]
     report_dir = f'../Hyp_Tuning/' + REP
+    report_dir = f'../Report/' + REP
     os.makedirs(report_dir, exist_ok=OVERWRITE)
 
     # Load and preprocess the data
@@ -106,14 +107,16 @@ if __name__ == '__main__':
 
     OVERWRITE = True
 
+    EPOCHS = 30
+    BATCH_SIZE = 64
+    LR = 1e-6
     LENET = False
-    BATCH_SIZE = 32
-    EPOCHS = 50
+    CROP_BOTTOM = False
 
-    # main(EPOCHS, BATCH_SIZE, LENET, OVERWRITE)
+    main(EPOCHS, BATCH_SIZE, LR, LENET, CROP_BOTTOM, OVERWRITE)
 
-    for epochs in [10, 30]:
-        for batch_size in [32, 64]:
-            for lr in [1e-5, 1e-7]:
-                for lenet in [False, True]:
-                    main(epochs, batch_size, lr, lenet, OVERWRITE)
+    # for epochs in [10, 30]:
+    #     for batch_size in [32, 64]:
+    #         for lr in [1e-5, 1e-7]:
+    #             for lenet in [False, True]:
+    #                 main(epochs, batch_size, lr, lenet, OVERWRITE)

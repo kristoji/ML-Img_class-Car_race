@@ -29,7 +29,7 @@ def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, crop_bottom=False, over
     REP = "LeNet" if LENET else "CNN"
     REP += f"_e{EPOCHS}_b{BATCH_SIZE}"
     REP += f"_lr" + str(lr)[-1]
-    report_dir = f'../Hyp_Tuning/' + REP
+    # report_dir = f'../Hyp_Tuning/Another_CNN/' + REP
     report_dir = f'../Report/' + REP
     os.makedirs(report_dir, exist_ok=OVERWRITE)
 
@@ -43,7 +43,9 @@ def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, crop_bottom=False, over
     if LENET:
         model = models.build_leNet_model(input_shape, NUM_CLASSES, lr=lr)
     else:
-        model = models.build_cnn_model(input_shape, NUM_CLASSES, lr=lr)
+        # model = models.build_cnn_model(input_shape, NUM_CLASSES, lr=lr)
+        # model = models.build_another_cnn_model(input_shape, NUM_CLASSES, lr=lr)
+        model = models.build_imagenet_model(input_shape, NUM_CLASSES, lr=lr)
 
     # Print the model summary
     reports.save_summary(model, report_dir)
@@ -97,26 +99,28 @@ def main(epochs=10, batch_size=32, lr=1e-3, lenet=False, crop_bottom=False, over
 
 # TF_CPP_MIN_LOG_LEVEL=2 python main.py
 if __name__ == '__main__':
-    # gpus = tf.config.experimental.list_physical_devices('GPU')
-    # if gpus:
-    #     try:
-    #         for gpu in gpus:
-    #             tf.config.experimental.set_memory_growth(gpu, True)
-    #     except RuntimeError as e:
-    #         print(e)
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
 
-    OVERWRITE = True
+    OVERWRITE = False
 
-    EPOCHS = 30
-    BATCH_SIZE = 64
-    LR = 1e-6
+    EPOCHS = 10
+    BATCH_SIZE = 32
+    LR = 1e-5
     LENET = False
     CROP_BOTTOM = False
 
     main(EPOCHS, BATCH_SIZE, LR, LENET, CROP_BOTTOM, OVERWRITE)
 
-    # for epochs in [10, 30]:
-    #     for batch_size in [32, 64]:
-    #         for lr in [1e-5, 1e-7]:
-    #             for lenet in [False, True]:
+    # for epochs in [30]:
+    #     for batch_size in [64]:
+    #         for lr in [1e-7]:
+    #             if batch_size == 64 and lr == 1e-3:
+    #                 continue
+    #             for lenet in [False]:
     #                 main(epochs, batch_size, lr, lenet, OVERWRITE)

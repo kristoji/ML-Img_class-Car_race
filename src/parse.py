@@ -98,5 +98,5 @@ if __name__ == '__main__':
     # print("Sample train labels:", y_train[-1])
     # print("Sample test labels:", y_test[-1])
 
-    save_img(X_train[-1], "./sample.png")
+    save_img(remove_green(X_train[-1]), "./sample.png")
     # save_img()
